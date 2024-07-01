@@ -1,3 +1,4 @@
+const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
@@ -15,19 +16,26 @@ function copyFileToDirectory(sourceFilePath, destinationDir) {
 
 // copyFileToDirectory('/home/user/Desktop/Development/text/new-file.txt', '/home/user/Desktop/Development/text/dir1');
 
-const http = require('http');
-//HTTP
+// HTTP
 const server = http.createServer((req, res) => {
     res.setHeader('Content-Type', 'text/html');
-
-    res.write('<html> <head> <title>Node js class</title> </head> <body>');
-    res.write('<h1>Hello World!</h1>');
-    res.write('</body> </html>');
-    res.end();
-
+    if (req.url === '/file') {
+        fs.readFile("/home/user/Desktop/Development/text/idex.html", (err, data) => {
+            if (err) {
+                res.statusCode = 500;
+                res.end('Internal Server Error');
+            } else {
+                res.statusCode = 200;
+                res.end(data);
+            }
+        });
+    } else {
+        res.statusCode = 404;
+        res.end('<h1>Page not found</h1>');
+    }
 });
 
-const port = 3000;
+const port = 3002;
 const host = 'localhost';
 
 server.listen(port, host, () => {
